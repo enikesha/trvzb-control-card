@@ -1,0 +1,786 @@
+:host {
+  display: block;
+}
+ha-card {
+  overflow: hidden;
+}
+#heating-eve-preview {
+  padding: 0;
+}
+#heating-eve-preview * {
+  box-sizing: border-box;
+}
+#heating-eve-preview [hidden] {
+  display: none !important;
+}
+#heating-eve-preview .ha-demo {
+  --ha-background: var(--secondary-background-color, #fafafa);
+  --ha-surface: var(--ha-card-background, var(--card-background-color, #fff));
+  --ha-text: var(--primary-text-color, #212121);
+  --ha-secondary: var(--secondary-text-color, #626262);
+  --ha-divider: var(--divider-color, #e5e5e5);
+  --ha-input: var(
+    --input-fill-color,
+    var(--secondary-background-color, #f4f4f4)
+  );
+  --ha-accent: var(--primary-color, #03a9f4);
+  --ha-accent-foreground: var(--text-primary-color, #fff);
+  --ha-selected: color-mix(in srgb, var(--ha-accent) 14%, var(--ha-surface));
+  --ha-danger: var(--error-color, #db4437);
+  color: var(--ha-text);
+  background: var(--ha-surface);
+  position: relative;
+  container-type: inline-size;
+  overflow: hidden;
+  font: 400 14px/1.45 var(--ha-font-family-body, Roboto, Arial, sans-serif);
+}
+#heating-eve-preview h2,
+#heating-eve-preview h3 {
+  margin: 0;
+  font-weight: 500;
+}
+#heating-eve-preview h2 {
+  font-size: 20px;
+}
+#heating-eve-preview h3 {
+  font-size: 16px;
+}
+#heating-eve-preview button,
+#heating-eve-preview input,
+#heating-eve-preview select {
+  font: inherit;
+  color: inherit;
+}
+#heating-eve-preview button,
+#heating-eve-preview summary {
+  cursor: pointer;
+  touch-action: manipulation;
+}
+#heating-eve-preview button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+#heating-eve-preview ha-icon {
+  --mdc-icon-size: 18px;
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+  flex: none;
+}
+
+/* Device header and live controls. */
+#heating-eve-preview .device-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 16px 0;
+}
+#heating-eve-preview .device-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--ha-selected);
+  color: var(--ha-accent);
+  flex: none;
+}
+#heating-eve-preview .device-icon ha-icon {
+  --mdc-icon-size: 23px;
+  width: 23px;
+  height: 23px;
+}
+#heating-eve-preview .device-name .device-title {
+  overflow-wrap: anywhere;
+}
+#heating-eve-preview .device-name {
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  text-align: left;
+}
+#heating-eve-preview .device-name > span {
+  color: var(--ha-secondary);
+  font-size: 12px;
+  display: block;
+}
+#heating-eve-preview .battery {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  color: var(--ha-secondary);
+  font-size: 12px;
+  white-space: nowrap;
+}
+#heating-eve-preview .battery ha-icon {
+  --mdc-icon-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+#heating-eve-preview .battery.low {
+  color: var(--ha-danger);
+}
+#heating-eve-preview .ha-content {
+  padding: 8px 16px;
+}
+#heating-eve-preview .control-panel {
+  padding: 16px 0 0;
+}
+#heating-eve-preview .temperature-grid,
+#heating-eve-preview .mode-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
+  column-gap: 14px;
+  align-items: center;
+}
+#heating-eve-preview .room-temperature,
+#heating-eve-preview .target-temperature {
+  min-width: 0;
+}
+#heating-eve-preview .room-temperature > span:first-child,
+#heating-eve-preview .setpoint-label {
+  display: block;
+  color: var(--ha-secondary);
+  font-size: 12px;
+  margin: 0 0 5px;
+}
+#heating-eve-preview .room-temperature > div {
+  display: flex;
+  gap: 4px;
+  align-items: baseline;
+  min-height: 44px;
+}
+#heating-eve-preview #current-temperature {
+  font-size: 29px;
+  letter-spacing: -1px;
+  font-variant-numeric: tabular-nums;
+}
+#heating-eve-preview .temperature-unit {
+  font-size: 16px;
+  color: var(--ha-secondary);
+}
+#heating-eve-preview .target-temperature {
+  border-left: 1px solid var(--ha-divider);
+  padding-left: 14px;
+  text-align: center;
+}
+#heating-eve-preview .setpoint-stepper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2px;
+  min-width: 0;
+}
+#heating-eve-preview .setpoint-button {
+  width: 32px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 22px;
+  background: transparent;
+  display: grid;
+  place-items: center;
+  color: var(--ha-accent);
+  flex: none;
+}
+#heating-eve-preview .setpoint-button:hover {
+  background: var(--ha-selected);
+}
+#heating-eve-preview #target-temperature {
+  font-size: 25px;
+  min-width: 0;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+}
+#heating-eve-preview .mode-row {
+  margin: 4px 0;
+}
+#heating-eve-preview .heating-status {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--state-climate-heat-color, #ff9800);
+  font-size: 12px;
+  min-height: 40px;
+}
+#heating-eve-preview .heating-status ha-icon {
+  --mdc-icon-size: 14px;
+  width: 14px;
+  height: 14px;
+}
+#heating-eve-preview .heating-status.is-idle {
+  color: var(--ha-secondary);
+}
+#heating-eve-preview .mode-picker {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2px;
+  padding-left: 14px;
+  min-width: 0;
+}
+#heating-eve-preview .mode-picker button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 20px;
+  background: transparent;
+  color: var(--ha-secondary);
+  min-height: 40px;
+  font-size: 11px;
+  padding: 6px 2px;
+}
+#heating-eve-preview .mode-picker ha-icon {
+  display: none;
+}
+#heating-eve-preview .mode-picker button[aria-pressed="true"],
+#heating-eve-preview .day-picker button[aria-pressed="true"] {
+  background: var(--ha-selected);
+  color: var(--ha-accent);
+  font-weight: 500;
+}
+#heating-eve-preview .target-context,
+#heating-eve-preview #next-event-detail {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+#heating-eve-preview .next-event {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 8px;
+  min-height: 36px;
+  color: var(--ha-secondary);
+  text-align: left;
+}
+#heating-eve-preview .next-event > ha-icon {
+  display: none;
+}
+#heating-eve-preview summary > ha-icon {
+  color: var(--ha-secondary);
+}
+#heating-eve-preview .next-event > div {
+  flex: 1;
+  min-width: 0;
+}
+#heating-eve-preview #next-event-label {
+  display: block;
+  font-size: 12px;
+}
+#heating-eve-preview #resume-schedule {
+  font-size: 12px;
+  min-height: 40px;
+  padding: 4px;
+}
+
+/* Shared actions and collapsible sections. */
+#heating-eve-preview .icon-button {
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ha-secondary);
+  flex: none;
+}
+#heating-eve-preview .icon-button:hover {
+  background: var(--ha-input);
+}
+#heating-eve-preview .text-button {
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  background: transparent;
+  border: 0;
+  color: var(--ha-accent);
+  font-weight: 500;
+}
+#heating-eve-preview .primary-button {
+  background: var(--ha-accent);
+  color: var(--ha-accent-foreground);
+  font-weight: 500;
+  border: 0;
+  border-radius: 22px;
+  padding: 11px 20px;
+  min-height: 44px;
+}
+#heating-eve-preview .device-section {
+  border-top: 1px solid var(--ha-divider);
+  margin: 0 4px;
+}
+#heating-eve-preview .device-section > summary {
+  list-style: none;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  min-height: 56px;
+  user-select: none;
+}
+#heating-eve-preview summary::-webkit-details-marker {
+  display: none;
+}
+#heating-eve-preview .device-section > summary > span {
+  flex: 1;
+  font-size: 15px;
+  font-weight: 500;
+}
+#heating-eve-preview .device-section small {
+  display: block;
+  color: var(--ha-secondary);
+  font-size: 12px;
+  font-weight: 400;
+  margin-top: 3px;
+}
+#heating-eve-preview details[open] > summary .disclosure-icon {
+  transform: rotate(180deg);
+}
+
+/* Schedule and editable temperature profiles. */
+#heating-eve-preview .schedule-body {
+  padding-bottom: 18px;
+}
+#heating-eve-preview .ha-panel {
+  border: 1px solid var(--ha-divider);
+  border-radius: 12px;
+  background: var(--ha-background);
+  padding: 0 12px;
+  margin-bottom: 16px;
+}
+#heating-eve-preview .section-title {
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+#heating-eve-preview .temperature-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 54px;
+  border-bottom: 1px solid var(--ha-divider);
+}
+#heating-eve-preview .temperature-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex: none;
+  background: var(--preset-color);
+}
+#heating-eve-preview .temperature-name {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+#heating-eve-preview .temperature-value {
+  font-size: 18px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+#heating-eve-preview .day-picker {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 3px;
+  margin: 0 -4px 16px;
+}
+#heating-eve-preview .day-picker button {
+  min-height: 44px;
+  min-width: 0;
+  border: 0;
+  border-radius: 22px;
+  background: transparent;
+  font-size: 13px;
+}
+#heating-eve-preview .day-title {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+#heating-eve-preview #day-title {
+  font-weight: 500;
+}
+#heating-eve-preview #day-count {
+  font-size: 12px;
+  color: var(--ha-secondary);
+  align-self: center;
+}
+#heating-eve-preview .timeline-axis {
+  display: flex;
+  justify-content: space-between;
+  color: var(--ha-secondary);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  margin-bottom: 5px;
+}
+#heating-eve-preview .timeline {
+  height: 20px;
+  position: relative;
+  border-radius: 5px;
+  overflow: hidden;
+  margin-bottom: 18px;
+}
+#heating-eve-preview .timeline-segment {
+  height: 100%;
+  position: absolute;
+  top: 0;
+  background: var(--preset-color);
+}
+#heating-eve-preview .base-temperature {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+#heating-eve-preview .base-temperature > span {
+  color: var(--ha-secondary);
+  font-size: 13px;
+}
+#heating-eve-preview select {
+  background: var(--ha-input);
+  border: 0;
+  border-bottom: 1px solid var(--ha-secondary);
+  border-radius: 5px 5px 0 0;
+  padding: 9px 24px 9px 10px;
+  min-height: 44px;
+  max-width: 100%;
+  font-size: 16px;
+}
+#heating-eve-preview .base-temperature select {
+  max-width: 54%;
+}
+#heating-eve-preview .period-list {
+  border-top: 1px solid var(--ha-divider);
+}
+#heating-eve-preview .period {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 44px;
+  column-gap: 2px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--ha-divider);
+}
+#heating-eve-preview .period-main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+  gap: 9px;
+}
+#heating-eve-preview .period-times {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
+  font-variant-numeric: tabular-nums;
+}
+#heating-eve-preview .period select {
+  width: 100%;
+  min-width: 0;
+}
+#heating-eve-preview .period-preset {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  min-width: 0;
+  width: 100%;
+}
+#heating-eve-preview .period-preset .temperature-dot {
+  width: 8px;
+  height: 8px;
+}
+#heating-eve-preview .period .icon-button {
+  align-self: center;
+}
+#heating-eve-preview .schedule-time-field {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+}
+#heating-eve-preview .schedule-time-input {
+  width: 78px;
+  min-width: 0;
+  padding: 8px;
+  background: var(--ha-input);
+  border: 0;
+  border-bottom: 1px solid var(--ha-secondary);
+  border-radius: 4px 4px 0 0;
+  min-height: 44px;
+  font-size: 16px;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+#heating-eve-preview .schedule-time-input[aria-invalid="true"] {
+  border-bottom-color: var(--ha-danger);
+}
+#heating-eve-preview .period .time-meridiem {
+  width: 64px;
+  min-width: 0;
+  padding: 8px 2px;
+  font-size: 13px;
+  min-height: 44px;
+}
+#heating-eve-preview .save-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: space-between;
+  padding: 0 4px;
+}
+#heating-eve-preview #save-status {
+  color: var(--ha-secondary);
+  font-size: 12px;
+  max-width: 53%;
+}
+
+/* Device settings. */
+#heating-eve-preview .settings-body {
+  padding-bottom: 12px;
+}
+#heating-eve-preview .setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 68px;
+  border-top: 1px solid var(--ha-divider);
+  font-size: 13px;
+}
+#heating-eve-preview .setting-row > span:first-child {
+  flex: 1;
+}
+#heating-eve-preview .ha-switch {
+  appearance: none;
+  position: relative;
+  width: 44px;
+  height: 26px;
+  border-radius: 14px;
+  background: var(--ha-secondary);
+  border: 0;
+  margin: 9px 0;
+  flex: none;
+  cursor: pointer;
+}
+#heating-eve-preview .ha-switch::before {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  left: 3px;
+  top: 3px;
+  border-radius: 50%;
+  background: var(--ha-surface);
+}
+#heating-eve-preview .ha-switch:checked {
+  background: var(--ha-accent);
+}
+#heating-eve-preview .ha-switch:checked::before {
+  left: 21px;
+}
+#heating-eve-preview .numeric-setting {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  color: var(--ha-secondary);
+}
+#heating-eve-preview .numeric-setting input {
+  width: 60px;
+  padding: 8px;
+  border: 0;
+  border-radius: 4px 4px 0 0;
+  border-bottom: 1px solid var(--ha-secondary);
+  background: var(--ha-input);
+  min-height: 44px;
+  font-size: 16px;
+  text-align: center;
+}
+
+/* Dialogs and feedback. */
+#heating-eve-preview .dialog-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  background: rgb(0 0 0 / 45%);
+  padding: 100px 14px 20px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+#heating-eve-preview .ha-dialog {
+  width: 100%;
+  background: var(--ha-surface);
+  border: 1px solid var(--ha-divider);
+  border-radius: 18px;
+  padding: 22px;
+  box-shadow: var(--ha-card-box-shadow);
+}
+#heating-eve-preview .ha-dialog h3 {
+  font-size: 20px;
+  margin-bottom: 22px;
+}
+#heating-eve-preview .field-label {
+  display: block;
+  color: var(--ha-secondary);
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+#heating-eve-preview .name-input {
+  width: 100%;
+  font-size: 16px;
+  min-height: 48px;
+  background: var(--ha-input);
+  border: 0;
+  border-bottom: 1px solid var(--ha-secondary);
+  border-radius: 5px 5px 0 0;
+  padding: 10px 12px;
+  margin-bottom: 20px;
+}
+#heating-eve-preview .temperature-stepper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  margin: 8px 0 24px;
+}
+#heating-eve-preview .temperature-stepper input {
+  width: 100px;
+  min-height: 48px;
+  text-align: center;
+  border: 0;
+  border-bottom: 1px solid var(--ha-secondary);
+  background: var(--ha-input);
+  border-radius: 5px 5px 0 0;
+  font-size: 24px;
+  font-variant-numeric: tabular-nums;
+}
+#heating-eve-preview input[type="number"]::-webkit-inner-spin-button {
+  appearance: none;
+}
+#heating-eve-preview .dialog-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 18px;
+}
+#heating-eve-preview .dialog-actions .text-button {
+  padding: 8px 12px;
+}
+#heating-eve-preview .delete-button {
+  margin-right: auto;
+  color: var(--ha-danger);
+}
+#heating-eve-preview .copy-choice {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+}
+#heating-eve-preview .copy-choice input {
+  accent-color: var(--ha-accent);
+  width: 18px;
+  height: 18px;
+}
+#heating-eve-preview .copy-note {
+  color: var(--ha-secondary);
+  margin: 0 0 14px;
+  font-size: 13px;
+}
+#heating-eve-preview .error-message {
+  font-size: 13px;
+  color: var(--ha-danger);
+  padding-bottom: 14px;
+}
+#heating-eve-preview .device-feedback {
+  padding: 0 20px 16px;
+  color: var(--ha-secondary);
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+#heating-eve-preview .device-feedback[data-error="true"] {
+  color: var(--ha-danger);
+}
+@container (max-width: 350px) {
+  #heating-eve-preview .device-header {
+    padding: 14px 12px 0;
+    gap: 8px;
+  }
+  #heating-eve-preview .device-name > span,
+  #heating-eve-preview .battery {
+    font-size: 11px;
+  }
+  #heating-eve-preview .ha-content {
+    padding: 8px 12px;
+  }
+  #heating-eve-preview .temperature-grid,
+  #heating-eve-preview .mode-row {
+    column-gap: 8px;
+  }
+  #heating-eve-preview .target-temperature,
+  #heating-eve-preview .mode-picker {
+    padding-left: 8px;
+  }
+  #heating-eve-preview .setpoint-button {
+    width: 26px;
+  }
+  #heating-eve-preview .setpoint-stepper {
+    gap: 0;
+  }
+  #heating-eve-preview #target-temperature {
+    font-size: 22px;
+  }
+}
+
+/* Keep an interval's time, preset and remove action on one aligned row. */
+#heating-eve-preview .period {
+  grid-template-columns: minmax(0, 1fr) 32px;
+  align-items: center;
+}
+#heating-eve-preview .period-main {
+  grid-template-columns: minmax(112px, 0.9fr) minmax(0, 1fr);
+  gap: 8px;
+}
+#heating-eve-preview .period-times {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: 3px;
+}
+#heating-eve-preview .schedule-time-input {
+  width: 100%;
+  padding: 8px 2px;
+  font-size: 14px;
+}
+#heating-eve-preview .period-preset {
+  gap: 5px;
+}
+#heating-eve-preview .period-preset select {
+  padding: 8px 16px 8px 5px;
+  font-size: 14px;
+}
+#heating-eve-preview .period .icon-button {
+  width: 32px;
+}
+#heating-eve-preview .schedule-time-field:has(.time-meridiem) {
+  flex-wrap: wrap;
+}
+
+#heating-eve-preview .device-name .device-title {
+  color: var(--ha-text);
+  font-size: 16px;
+  font-weight: 500;
+}
+#heating-eve-preview .device-name:hover .device-title {
+  color: var(--ha-accent);
+}

@@ -1,0 +1,26 @@
+{
+  "name": "trvzb-control-card",
+  "version": "0.3.0",
+  "private": true,
+  "type": "module",
+  "description": "Unified SONOFF TRVZB Lovelace control with on-device schedules",
+  "scripts": {
+    "build": "python3 scripts/build-preview.py && node scripts/build-card.mjs",
+    "test": "node --test",
+    "build:card": "node scripts/build-card.mjs",
+    "test:browser": "node tests/browser/regressions.mjs",
+    "check:dist": "node scripts/build-card.mjs --check",
+    "check:release": "node scripts/check-release.mjs",
+    "docs:screenshots": "node scripts/screenshots.mjs",
+    "release:assets": "npm run check:dist && npm run check:release && node scripts/release-assets.mjs"
+  },
+  "devDependencies": {
+    "@mdi/js": "7.4.47",
+    "esbuild": "0.28.2",
+    "playwright": "1.64.1"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  }
+}

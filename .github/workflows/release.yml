@@ -1,0 +1,44 @@
+name: Draft release
+on:
+  push:
+    tags: ["v*"]
+permissions:
+  contents: read
+jobs:
+  checks:
+    uses: ./.github/workflows/checks.yml
+  draft:
+    needs: checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+          cache: npm
+      - run: npm ci
+      - name: Verify release tag
+        run: npm run check:release -- --tag "$RELEASE_TAG"
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: trvzb-control-card
+          path: release-assets
+      - name: Create a draft with the checked artifacts
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          sha256sum release-assets/*.js release-assets/*.map > release-assets/SHA256SUMS
+          sed -i 's|release-assets/||g' release-assets/SHA256SUMS
+          gh release create "$RELEASE_TAG" --verify-tag --draft \
+            --title "$RELEASE_TAG" --notes-file "docs/releases/${RELEASE_TAG#v}.md" \
+            release-assets/trvzb-control-card.js \
+            release-assets/trvzb-control-card.js.map release-assets/SHA256SUMS

@@ -1,0 +1,375 @@
+<div id="heating-eve-preview" data-language="en" class="viz-dotted-background">
+  <main class="ha-demo" aria-label="Living room radiator control" data-i18n-aria-label="control_title">
+    <header class="device-header"><span class="device-icon"><i data-lucide="heater" aria-hidden="true"></i></span><div class="device-name"><h2><span data-i18n="room_name">Living room</span></h2><span><span data-i18n="device_name">Radiator · SONOFF TRVZB</span></span></div><span class="battery" aria-label="Battery 100 percent" data-i18n-aria-label="battery_label"><i data-lucide="battery-full" aria-hidden="true"></i>100%</span></header>
+    <div class="ha-content">
+      <section class="control-panel" aria-label="Temperature and mode" data-i18n-aria-label="temperature_and_mode">
+        <div class="room-temperature"><span><span data-i18n="room_temperature">Room temperature</span></span><div><span id="current-temperature">19.8</span><span class="temperature-unit">°C</span></div><span class="heating-status" id="heating-status" aria-live="polite"></span></div>
+        <div class="setpoint-label"><span data-i18n="target_temperature">Target temperature</span></div>
+        <div class="setpoint-stepper"><button type="button" class="setpoint-button" id="target-down" aria-label="Decrease target temperature" data-i18n-aria-label="target_down"><i data-lucide="minus" aria-hidden="true"></i></button><output id="target-temperature" aria-live="polite"></output><button type="button" class="setpoint-button" id="target-up" aria-label="Increase target temperature" data-i18n-aria-label="target_up"><i data-lucide="plus" aria-hidden="true"></i></button></div>
+        <div id="target-context" class="target-context" aria-live="polite"></div>
+        <div class="mode-picker" aria-label="Radiator mode" data-i18n-aria-label="device_mode"><button type="button" data-mode="auto"><i data-lucide="calendar-clock" aria-hidden="true"></i><span data-i18n="mode_auto">Auto</span></button><button type="button" data-mode="heat"><i data-lucide="hand" aria-hidden="true"></i><span data-i18n="mode_manual">Manual</span></button><button type="button" data-mode="off"><i data-lucide="power" aria-hidden="true"></i><span data-i18n="mode_off">Off</span></button></div>
+        <div class="next-event"><i data-lucide="clock-3" aria-hidden="true"></i><div><span id="next-event-label"></span><span id="next-event-detail"></span></div><button type="button" class="text-button" id="resume-schedule" hidden><span data-i18n="resume">Resume</span></button></div>
+      </section>
+      <details class="device-section" id="schedule-section">
+        <summary><i data-lucide="calendar-days" aria-hidden="true"></i><span><span data-i18n="schedule">Schedule</span><small id="schedule-summary"><span data-i18n="schedule_intro">Custom temperatures and time slots</span></small></span><i data-lucide="chevron-down" aria-hidden="true" class="disclosure-icon"></i></summary>
+        <div class="schedule-body">
+      <section class="ha-panel" aria-labelledby="temperatures-heading">
+        <div class="section-title"><h3 id="temperatures-heading"><span data-i18n="temperatures">Temperatures</span></h3></div>
+        <div id="temperature-list"></div>
+        <button class="text-button" id="add-temperature" type="button"><i data-lucide="plus" aria-hidden="true"></i><span data-i18n="add_temperature">Add temperature</span></button>
+      </section>
+      <section class="ha-panel schedule-panel" aria-labelledby="schedule-heading">
+        <div class="section-title"><h3 id="schedule-heading"><span data-i18n="schedule">Schedule</span></h3><button class="icon-button" id="copy-day" type="button" aria-label="Copy day" data-i18n-aria-label="copy_day"><i data-lucide="copy" aria-hidden="true"></i></button></div>
+        <div class="day-picker" id="day-picker" aria-label="Day of the week" data-i18n-aria-label="day_of_week"></div>
+        <div class="day-title"><span id="day-title"></span><span id="day-count"></span></div>
+        <div class="timeline-axis"><span>00</span><span>06</span><span>12</span><span>18</span><span>24</span></div>
+        <div class="timeline" id="timeline" aria-label="Temperatures throughout the day" data-i18n-aria-label="daily_timeline"></div>
+        <label class="base-temperature"><span><span data-i18n="otherwise">At other times</span></span><select id="base-temperature" aria-label="Temperature outside time slots" data-i18n-aria-label="base_temperature"></select></label>
+        <div id="period-list" class="period-list"></div>
+        <button class="text-button" id="add-period" type="button"><i data-lucide="plus" aria-hidden="true"></i><span data-i18n="add_period">Add time slot</span></button>
+        <div id="schedule-error" class="error-message" role="alert" hidden></div>
+      </section>
+      <div class="save-row"><span id="save-status" aria-live="polite"><span data-i18n="demo_changes">Changes stay in this preview</span></span><button class="primary-button" id="save-schedule" type="button"><span data-i18n="save">Save</span></button></div>
+        </div>
+      </details>
+      <details class="device-section" id="settings-section"><summary><i data-lucide="settings-2" aria-hidden="true"></i><span><span data-i18n="settings">Settings</span><small id="settings-summary"><span data-i18n="settings_intro">External sensor · frost protection</span></small></span><i data-lucide="chevron-down" aria-hidden="true" class="disclosure-icon"></i></summary>
+        <div class="settings-body">
+          <label class="setting-row"><span><span data-i18n="child_lock">Child lock</span><small><span data-i18n="child_lock_help">Prevent accidental dial changes</span></small></span><input class="ha-switch" id="child-lock" type="checkbox" role="switch"></label>
+          <label class="setting-row"><span><span data-i18n="open_window">Open window detection</span><small><span data-i18n="open_window_help">Pause on a rapid temperature drop</span></small></span><input class="ha-switch" id="open-window" type="checkbox" role="switch"></label>
+          <label class="setting-row"><span><span data-i18n="temperature_source">Temperature sensor</span></span><select id="temperature-source" aria-label="Temperature sensor" data-i18n-aria-label="temperature_source"><option value="external" data-i18n="source_external">External</option><option value="internal" data-i18n="source_internal">Built-in</option></select></label>
+          <label class="setting-row"><span><span data-i18n="frost_protection">Frost protection</span></span><span class="numeric-setting"><input id="frost-temperature" type="number" min="4" max="10" step="0.5" value="7" aria-label="Frost protection temperature" data-i18n-aria-label="frost_temperature">°C</span></label>
+        </div>
+      </details>
+      <div class="demo-footer"><span><span data-i18n="demo_time">Preview · Wednesday, 20:30</span></span><span><span data-i18n="not_connected">Not connected to HA</span></span></div>
+    </div>
+    <div id="dialog-layer" class="dialog-layer" hidden></div>
+  </main>
+  <label class="preview-language"><span data-i18n="preview_language">Preview language</span><select id="preview-language" aria-label="Preview language" data-i18n-aria-label="preview_language"><option value="en">English</option><option value="ru">Русский</option></select></label>
+</div>
+<style>
+#heating-eve-preview {padding:20px 10px;}
+#heating-eve-preview .ha-demo {--ha-background:light-dark(#fafafa,#111111);--ha-surface:light-dark(#fff,#1c1c1c);--ha-text:light-dark(#212121,#e6e6e6);--ha-secondary:light-dark(#626262,#a0a0a0);--ha-divider:light-dark(#e5e5e5,#343434);--ha-input:light-dark(#f4f4f4,#282828);--ha-accent:light-dark(#007fa9,#03a9f4);--ha-accent-foreground:light-dark(#fff,#111);--ha-selected:light-dark(#e0f2fa,#17323e);--ha-danger:light-dark(#b3261e,#ffb4ab);--ha-shadow:light-dark(#0002,#0008);max-width:440px;margin:0 auto;background:var(--ha-background);color:var(--ha-text);border:1px solid var(--ha-divider);border-radius:18px;overflow:hidden;position:relative;font:400 14px/1.45 Roboto,"Helvetica Neue",Arial,sans-serif;color-scheme:light dark;}
+#heating-eve-preview * {box-sizing:border-box;}
+#heating-eve-preview h2,#heating-eve-preview h3 {margin:0;font-weight:500;line-height:1.4;}
+#heating-eve-preview h2 {font-size:22px;}
+#heating-eve-preview h3 {font-size:16px;}
+#heating-eve-preview button,#heating-eve-preview input,#heating-eve-preview select {font:inherit;color:inherit;}
+#heating-eve-preview button {touch-action:manipulation;}
+#heating-eve-preview button:disabled {opacity:.4;cursor:default;}
+#heating-eve-preview [hidden] {display:none!important;}
+#heating-eve-preview .ha-toolbar {height:60px;display:flex;align-items:center;gap:14px;padding:0 20px;background:var(--ha-surface);border-bottom:1px solid var(--ha-divider);font-size:18px;font-weight:500;}
+#heating-eve-preview .ha-toolbar svg {width:22px;height:22px;color:var(--ha-accent);}
+#heating-eve-preview .demo-label {margin-left:auto;font-size:12px;font-weight:400;color:var(--ha-secondary);}
+#heating-eve-preview .ha-content {padding:20px 16px 16px;}
+#heating-eve-preview .page-heading {margin:0 4px 20px;}
+#heating-eve-preview .page-heading>span {display:block;margin-top:2px;color:var(--ha-secondary);}
+#heating-eve-preview .ha-panel {border:1px solid var(--ha-divider);border-radius:12px;background:var(--ha-surface);padding:0 16px;margin-bottom:16px;}
+#heating-eve-preview .section-title {height:52px;display:flex;align-items:center;justify-content:space-between;}
+#heating-eve-preview .temperature-row {display:flex;align-items:center;gap:12px;min-height:54px;border-bottom:1px solid var(--ha-divider);}
+#heating-eve-preview .temperature-dot {width:12px;height:12px;border-radius:50%;flex:none;background:var(--preset-color);}
+#heating-eve-preview .temperature-name {flex:1;min-width:0;overflow-wrap:anywhere;}
+#heating-eve-preview .temperature-value {font-size:18px;font-variant-numeric:tabular-nums;white-space:nowrap;}
+#heating-eve-preview .icon-button {width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;border:0;border-radius:50%;background:transparent;color:var(--ha-secondary);flex:none;}
+#heating-eve-preview .icon-button:hover {background:var(--ha-input);}
+#heating-eve-preview svg {width:18px;height:18px;flex:none;}
+#heating-eve-preview .text-button {min-height:48px;display:flex;align-items:center;gap:10px;padding:8px 0;background:transparent;border:0;color:var(--ha-accent);font-weight:500;}
+#heating-eve-preview .day-picker {display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px;margin:0 -4px 16px;}
+#heating-eve-preview .day-picker button {height:42px;min-width:0;border:0;border-radius:21px;background:transparent;font-size:13px;}
+#heating-eve-preview .day-picker button[aria-pressed="true"] {background:var(--ha-selected);color:var(--ha-accent);font-weight:500;}
+#heating-eve-preview .day-title {display:flex;justify-content:space-between;gap:8px;margin-bottom:12px;}
+#heating-eve-preview #day-title {font-weight:500;}
+#heating-eve-preview #day-count {font-size:12px;color:var(--ha-secondary);align-self:center;}
+#heating-eve-preview .timeline-axis {display:flex;justify-content:space-between;color:var(--ha-secondary);font-size:11px;font-variant-numeric:tabular-nums;margin-bottom:5px;}
+#heating-eve-preview .timeline {height:20px;position:relative;border-radius:5px;overflow:hidden;margin-bottom:18px;}
+#heating-eve-preview .timeline-segment {height:100%;position:absolute;top:0;background:var(--preset-color);}
+#heating-eve-preview .base-temperature {display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px;}
+#heating-eve-preview .base-temperature>span {color:var(--ha-secondary);font-size:13px;}
+#heating-eve-preview select {background:var(--ha-input);border:0;border-bottom:1px solid var(--ha-secondary);border-radius:5px 5px 0 0;padding:9px 24px 9px 10px;min-height:42px;max-width:100%;font-size:14px;}
+#heating-eve-preview .base-temperature select {max-width:54%;}
+#heating-eve-preview .period-list {border-top:1px solid var(--ha-divider);}
+#heating-eve-preview .period {display:grid;grid-template-columns:minmax(0,1fr) 44px;column-gap:2px;padding:12px 0;border-bottom:1px solid var(--ha-divider);}
+#heating-eve-preview .period-main {display:flex;flex-wrap:wrap;align-items:center;gap:9px 12px;}
+#heating-eve-preview .period-times {display:flex;align-items:center;gap:5px;font-variant-numeric:tabular-nums;}
+#heating-eve-preview input[type="time"] {width:79px;min-width:0;padding:7px 3px;background:var(--ha-input);border:0;border-bottom:1px solid var(--ha-secondary);border-radius:4px 4px 0 0;font-size:14px;min-height:40px;}
+#heating-eve-preview input::-webkit-calendar-picker-indicator {display:none;}
+#heating-eve-preview .period select {width:100%;min-width:0;}
+#heating-eve-preview .period-preset {display:flex;gap:8px;align-items:center;flex:1;min-width:124px;}
+#heating-eve-preview .period-preset .temperature-dot {width:8px;height:8px;}
+#heating-eve-preview .period .icon-button {align-self:center;}
+#heating-eve-preview .save-row {display:flex;align-items:center;gap:12px;justify-content:space-between;padding:0 4px;}
+#heating-eve-preview #save-status {color:var(--ha-secondary);font-size:12px;max-width:53%;}
+#heating-eve-preview .primary-button {background:var(--ha-accent);color:var(--ha-accent-foreground);font-weight:500;border:0;border-radius:22px;padding:11px 20px;min-height:44px;}
+#heating-eve-preview .error-message {font-size:13px;color:var(--ha-danger);padding-bottom:14px;}
+#heating-eve-preview .dialog-layer {position:absolute;inset:0;z-index:5;background:light-dark(#0005,#0009);padding:20px 14px;display:flex;align-items:center;justify-content:center;}
+#heating-eve-preview .ha-dialog {width:100%;background:var(--ha-surface);border:1px solid var(--ha-divider);border-radius:18px;padding:22px;box-shadow:0 8px 30px var(--ha-shadow);}
+#heating-eve-preview .ha-dialog h3 {font-size:20px;margin-bottom:22px;}
+#heating-eve-preview .field-label {display:block;color:var(--ha-secondary);font-size:12px;margin-bottom:6px;}
+#heating-eve-preview .name-input {width:100%;font-size:16px;min-height:48px;background:var(--ha-input);border:0;border-bottom:1px solid var(--ha-secondary);border-radius:5px 5px 0 0;padding:10px 12px;margin-bottom:20px;}
+#heating-eve-preview .temperature-stepper {display:flex;align-items:center;justify-content:center;gap:18px;margin:8px 0 24px;}
+#heating-eve-preview .temperature-stepper input {width:100px;min-height:48px;text-align:center;border:0;border-bottom:1px solid var(--ha-secondary);background:var(--ha-input);border-radius:5px 5px 0 0;font-size:24px;font-variant-numeric:tabular-nums;}
+#heating-eve-preview input[type="number"]::-webkit-inner-spin-button {appearance:none;}
+#heating-eve-preview .dialog-actions {display:flex;gap:8px;justify-content:flex-end;align-items:center;flex-wrap:wrap;margin-top:18px;}
+#heating-eve-preview .dialog-actions .text-button {padding:8px 12px;}
+#heating-eve-preview .delete-button {margin-right:auto;color:var(--ha-danger);}
+#heating-eve-preview .copy-choice {display:flex;align-items:center;gap:12px;min-height:44px;}
+#heating-eve-preview .copy-choice input {accent-color:var(--ha-accent);width:18px;height:18px;}
+#heating-eve-preview .copy-note {color:var(--ha-secondary);margin:0 0 14px;font-size:13px;}
+
+@media(max-width:360px){#heating-eve-preview{padding:10px 0;}#heating-eve-preview .ha-content{padding:16px 10px;}#heating-eve-preview .ha-panel{padding:0 12px;}#heating-eve-preview .temperature-value{font-size:16px;}}
+#heating-eve-preview .device-header{display:flex;align-items:center;gap:12px;padding:22px 20px 0;}
+#heating-eve-preview .device-icon{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--ha-selected);color:var(--ha-accent);flex:none;}
+#heating-eve-preview .device-icon svg{width:23px;height:23px;}
+#heating-eve-preview .device-name{flex:1;min-width:0;}
+#heating-eve-preview .device-name h2{font-size:20px;}
+#heating-eve-preview .device-name>span{color:var(--ha-secondary);font-size:12px;display:block;}
+#heating-eve-preview .battery{display:flex;gap:5px;align-items:center;color:var(--ha-secondary);font-size:12px;white-space:nowrap;}
+#heating-eve-preview .battery svg{width:20px;height:20px;}
+#heating-eve-preview .ha-content{padding:8px 16px 0;}
+#heating-eve-preview .ha-demo{background:var(--ha-surface);}
+#heating-eve-preview .control-panel{padding:20px 4px 0;text-align:center;}
+#heating-eve-preview .room-temperature>span:first-child{font-size:13px;color:var(--ha-secondary);}
+#heating-eve-preview .room-temperature>div{display:flex;gap:4px;justify-content:center;align-items:baseline;margin-top:0;}
+#heating-eve-preview #current-temperature{font-size:48px;font-weight:400;letter-spacing:-1.5px;line-height:1.2;font-variant-numeric:tabular-nums;}
+#heating-eve-preview .temperature-unit{font-size:22px;color:var(--ha-secondary);}
+#heating-eve-preview .heating-status{display:flex;align-items:center;justify-content:center;gap:6px;color:light-dark(#a85d11,#f3b56f);font-size:13px;margin-top:8px;min-height:20px;}
+#heating-eve-preview .heating-status.is-idle{color:var(--ha-secondary);}
+#heating-eve-preview .heating-status svg{width:15px;height:15px;}
+#heating-eve-preview .setpoint-label{margin-top:24px;color:var(--ha-secondary);font-size:13px;}
+#heating-eve-preview .setpoint-stepper{display:flex;align-items:center;justify-content:center;gap:26px;margin-top:8px;}
+#heating-eve-preview .setpoint-button{width:48px;height:48px;border:1px solid var(--ha-divider);border-radius:50%;background:var(--ha-input);display:grid;place-items:center;color:var(--ha-accent);flex:none;}
+#heating-eve-preview .setpoint-button svg{width:20px;height:20px;}
+#heating-eve-preview #target-temperature{font-size:32px;min-width:108px;font-variant-numeric:tabular-nums;font-weight:500;}
+#heating-eve-preview .target-context{font-size:12px;color:var(--ha-secondary);min-height:20px;margin-top:10px;}
+#heating-eve-preview .mode-picker{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid var(--ha-divider);border-radius:24px;overflow:hidden;margin-top:20px;}
+#heating-eve-preview .mode-picker button{display:flex;align-items:center;justify-content:center;gap:6px;border:0;background:transparent;min-height:46px;font-size:13px;padding:8px 4px;}
+#heating-eve-preview .mode-picker button+button{border-left:1px solid var(--ha-divider);}
+#heating-eve-preview .mode-picker button[aria-pressed="true"]{background:var(--ha-selected);color:var(--ha-accent);font-weight:500;}
+#heating-eve-preview .mode-picker svg{width:17px;height:17px;}
+#heating-eve-preview .next-event{display:flex;align-items:center;gap:12px;text-align:left;margin:18px 0 20px;padding:12px;background:var(--ha-input);border-radius:10px;min-height:64px;}
+#heating-eve-preview .next-event>svg{color:var(--ha-secondary);}
+#heating-eve-preview .next-event>div{flex:1;min-width:0;}
+#heating-eve-preview #next-event-label{display:block;font-size:13px;font-weight:500;}
+#heating-eve-preview #next-event-detail{display:block;font-size:12px;color:var(--ha-secondary);margin-top:2px;}
+#heating-eve-preview #resume-schedule{font-size:12px;min-height:44px;}
+#heating-eve-preview .device-section{border-top:1px solid var(--ha-divider);margin:0 4px;}
+#heating-eve-preview .device-section>summary{list-style:none;display:flex;gap:12px;align-items:center;min-height:76px;user-select:none;}
+#heating-eve-preview .device-section>summary::-webkit-details-marker{display:none;}
+#heating-eve-preview .device-section>summary>span{flex:1;font-size:15px;font-weight:500;}
+#heating-eve-preview .device-section>summary>svg{color:var(--ha-secondary);width:20px;height:20px;}
+#heating-eve-preview .device-section small{display:block;color:var(--ha-secondary);font-size:12px;font-weight:400;margin-top:3px;}
+#heating-eve-preview .device-section[open]>summary .disclosure-icon{transform:rotate(180deg);}
+#heating-eve-preview .schedule-body{padding:0 0 18px;}
+#heating-eve-preview .ha-panel{background:var(--ha-background);padding:0 12px;}
+#heating-eve-preview .settings-body{padding-bottom:12px;}
+#heating-eve-preview .setting-row{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:68px;border-top:1px solid var(--ha-divider);font-size:13px;}
+#heating-eve-preview .setting-row>span:first-child{flex:1;}
+#heating-eve-preview .ha-switch{appearance:none;position:relative;width:44px;height:26px;border-radius:14px;background:var(--ha-secondary);border:0;margin:9px 0;flex:none;}
+#heating-eve-preview .ha-switch:before{content:'';position:absolute;width:20px;height:20px;left:3px;top:3px;border-radius:50%;background:var(--ha-surface);}
+#heating-eve-preview .ha-switch:checked{background:var(--ha-accent);}
+#heating-eve-preview .ha-switch:checked:before{left:21px;}
+#heating-eve-preview .ha-switch:before{width:20px;}
+#heating-eve-preview .numeric-setting{display:flex;gap:6px;align-items:center;color:var(--ha-secondary);}
+#heating-eve-preview .numeric-setting input{width:60px;padding:8px;border:0;border-radius:4px 4px 0 0;border-bottom:1px solid var(--ha-secondary);background:var(--ha-input);min-height:44px;font-size:16px;text-align:center;}
+#heating-eve-preview .demo-footer{display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;font-size:11px;color:var(--ha-secondary);padding:16px 4px;border-top:1px solid var(--ha-divider);}
+#heating-eve-preview .dialog-layer{align-items:flex-start;padding-top:100px;}
+#heating-eve-preview .period input,#heating-eve-preview select{font-size:16px;}
+#heating-eve-preview .day-picker button{min-height:44px;}
+@media(max-width:360px){#heating-eve-preview .device-header{padding:18px 14px 0;gap:8px;}#heating-eve-preview .battery{font-size:11px;}#heating-eve-preview .device-name>span{font-size:11px;}#heating-eve-preview .mode-picker button{gap:4px;font-size:12px;}#heating-eve-preview .ha-content{padding:8px 10px 0;}#heating-eve-preview .setpoint-stepper{gap:18px;}#heating-eve-preview .next-event{gap:8px;}}
+#heating-eve-preview .preview-language{display:flex;align-items:center;justify-content:center;gap:12px;margin:14px auto 0;font:400 12px/1.4 Roboto,Arial,sans-serif;color:light-dark(#626262,#a0a0a0);}
+#heating-eve-preview .preview-language select{font-size:13px;min-height:36px;background:light-dark(#f4f4f4,#282828);color:light-dark(#212121,#e6e6e6);}
+</style>
+<script>
+(()=>{
+const catalogs = {"en": {"control_title": "Living room radiator control", "room_name": "Living room", "device_name": "Radiator · SONOFF TRVZB", "battery_label": "Battery 100 percent", "temperature_and_mode": "Temperature and mode", "room_temperature": "Room temperature", "target_temperature": "Target temperature", "target_down": "Decrease target temperature", "target_up": "Increase target temperature", "device_mode": "Radiator mode", "mode_auto": "Auto", "mode_manual": "Manual", "mode_off": "Off", "resume": "Resume", "schedule": "Schedule", "schedule_intro": "Custom temperatures and time slots", "temperatures": "Temperatures", "add_temperature": "Add temperature", "copy_day": "Copy day", "day_of_week": "Day of the week", "daily_timeline": "Temperatures throughout the day", "otherwise": "At other times", "base_temperature": "Temperature outside time slots", "add_period": "Add time slot", "demo_changes": "Changes stay in this preview", "save": "Save", "settings": "Settings", "settings_intro": "External sensor · frost protection", "child_lock": "Child lock", "child_lock_help": "Prevent accidental dial changes", "open_window": "Open window detection", "open_window_help": "Pause on a rapid temperature drop", "temperature_source": "Temperature sensor", "source_external": "External", "source_internal": "Built-in", "frost_protection": "Frost protection", "frost_temperature": "Frost protection temperature", "demo_time": "Preview · Wednesday, 20:30", "not_connected": "Not connected to HA", "unsaved": "Unsaved changes", "heating": "Heating", "off": "Off", "target_reached": "Target reached", "until_next": "Until the next time slot", "manual_mode": "Manual mode", "temporary_override": "Temporary override", "constant_week": "One temperature all week", "schedule_paused": "Schedule paused", "resume_next": "Schedule resumes at the next time slot", "resume_auto": "Switch to Auto to resume the schedule", "external_sensor": "External sensor", "internal_sensor": "Built-in sensor", "dial_locked": "dial locked", "invalid_period": "The start must be earlier than the end.", "overlap": "Time slots overlap. Choose a different time.", "edit_temperature": "Edit temperature", "new_temperature": "New temperature", "name": "Name", "name_placeholder": "For example, Morning", "temperature_celsius": "Temperature, °C", "temperature_down": "Decrease temperature", "temperature_up": "Increase temperature", "delete": "Delete", "cancel": "Cancel", "done": "Done", "invalid_temperature": "Enter a name and a temperature from 4–35 °C in 0.5° steps.", "temperature_in_use": "This temperature is in use. Replace it in the time slots and “At other times” first.", "copy": "Copy", "copied": "Day copied. Ready to save.", "no_free_hour": "No free hour left. Shorten an existing time slot.", "saved": "Preview saved · HA unchanged", "preset_sleep": "Sleep", "preset_home": "Home", "preset_evening": "Evening", "preview_language": "Preview language", "edit_named": "Edit {name}", "period_start": "Time slot {count} start", "period_end": "Time slot {count} end", "period_temperature": "Time slot {count} temperature", "period_delete": "Delete time slot {count}", "until_then": "Until {time} · then {temperature}", "scheduled_preset": "Scheduled · {name}", "frost_value": "Frost protection · {temperature}", "next_period": "At {time} · {name}", "next_temperature": "Next temperature — {temperature}", "constant_temperature": "Always {temperature}", "minimum_temperature": "Minimum temperature {temperature}", "copy_note": "{day} → selected days. Their time slots will be replaced.", "period_count": {"one": "{count} time slot", "other": "{count} time slots"}, "schedule_count": {"one": "7 days · {count} temperature", "other": "7 days · {count} temperatures"}, "day_0": "Monday", "day_short_0": "Mon", "day_1": "Tuesday", "day_short_1": "Tue", "day_2": "Wednesday", "day_short_2": "Wed", "day_3": "Thursday", "day_short_3": "Thu", "day_4": "Friday", "day_short_4": "Fri", "day_5": "Saturday", "day_short_5": "Sat", "day_6": "Sunday", "day_short_6": "Sun", "stored_on_valve": "Stored on the radiator valve", "unavailable": "Unavailable", "idle": "Idle", "status_unknown": "Heating state unknown", "battery_value": "Battery {value}%", "connection_required": "Check the connection to the radiator", "schedule_unavailable": "Schedule data is unavailable. No default schedule will be sent.", "invalid_device_schedule": "The valve reported an invalid schedule.", "admin_required": "An administrator is required to save temperature names.", "sending": "Sending command…", "confirmation_timeout": "The valve did not confirm the update. Check its actual state before retrying.", "command_failed": "Could not update the radiator: {error}", "metadata_config_required": "Set dashboard and card_id to store temperature names.", "metadata_card_missing": "The card could not be uniquely identified in its dashboard.", "schedule_conflict": "The valve schedule changed while you were editing. Reload this page before saving.", "saving": "Saving schedule and waiting for the valve…", "saved_device": "Schedule and temperature names saved.", "save_partial": "Some days may have been saved. Reload the page and check the valve: {error}", "save_failed": "Schedule not saved: {error}", "too_many_transitions": "The valve supports at most six temperature changes per day, including midnight.", "invalid_time_24": "Enter a 24-hour time, e.g. 18:30 (24:00 is valid for an end time).", "invalid_time_12": "Enter a time from 01:00 to 12:59 and choose AM or PM.", "period_meridiem": "{name}: AM or PM"}, "ru": {"control_title": "Управление термоголовкой гостиной", "room_name": "Гостиная", "device_name": "Радиатор · SONOFF TRVZB", "battery_label": "Батарея 100 процентов", "temperature_and_mode": "Температура и режим", "room_temperature": "В комнате", "target_temperature": "Заданная температура", "target_down": "Уменьшить заданную температуру", "target_up": "Увеличить заданную температуру", "device_mode": "Режим головки", "mode_auto": "Авто", "mode_manual": "Вручную", "mode_off": "Выкл.", "resume": "Вернуть", "schedule": "Расписание", "schedule_intro": "Свои температуры и интервалы", "temperatures": "Температуры", "add_temperature": "Добавить температуру", "copy_day": "Копировать день", "day_of_week": "День недели", "daily_timeline": "Температуры в течение суток", "otherwise": "В остальное время", "base_temperature": "Температура вне интервалов", "add_period": "Добавить интервал", "demo_changes": "Изменения только в примере", "save": "Сохранить", "settings": "Настройки", "settings_intro": "Внешний датчик · защита от замерзания", "child_lock": "Блокировка крутилки", "child_lock_help": "Защита от случайного изменения", "open_window": "Обнаружение окна", "open_window_help": "Пауза при резком падении температуры", "temperature_source": "Датчик температуры", "source_external": "Внешний", "source_internal": "В головке", "frost_protection": "Защита от замерзания", "frost_temperature": "Температура защиты от замерзания", "demo_time": "Пример · среда, 20:30", "not_connected": "Не подключено к HA", "unsaved": "Есть несохранённые изменения", "heating": "Греет", "off": "Выключено", "target_reached": "Температура достигнута", "until_next": "До следующего периода", "manual_mode": "Ручной режим", "temporary_override": "Временная поправка", "constant_week": "Один режим на всю неделю", "schedule_paused": "Расписание приостановлено", "resume_next": "Расписание вернётся в следующий период", "resume_auto": "Вернётся после переключения в Авто", "external_sensor": "Внешний датчик", "internal_sensor": "Датчик в головке", "dial_locked": "крутилка заблокирована", "invalid_period": "Начало интервала должно быть раньше окончания.", "overlap": "Интервалы пересекаются. Выбери другое время.", "edit_temperature": "Изменить температуру", "new_temperature": "Новая температура", "name": "Название", "name_placeholder": "Например, Утро", "temperature_celsius": "Температура, °C", "temperature_down": "Уменьшить температуру", "temperature_up": "Увеличить температуру", "delete": "Удалить", "cancel": "Отмена", "done": "Готово", "invalid_temperature": "Укажи название и температуру 4–35 °C с шагом 0,5°.", "temperature_in_use": "Эта температура используется в расписании. Сначала замени её в интервалах и в «остальное время».", "copy": "Копировать", "copied": "День скопирован. Можно сохранить", "no_free_hour": "Нет свободного часа. Сократи существующий интервал.", "saved": "Пример сохранён · HA не изменён", "preset_sleep": "Сон", "preset_home": "Дома", "preset_evening": "Вечер", "preview_language": "Язык примера", "edit_named": "Изменить {name}", "period_start": "Начало интервала {count}", "period_end": "Конец интервала {count}", "period_temperature": "Температура интервала {count}", "period_delete": "Удалить интервал {count}", "until_then": "До {time} · затем {temperature}", "scheduled_preset": "По расписанию · {name}", "frost_value": "Защита от замерзания · {temperature}", "next_period": "В {time} · {name}", "next_temperature": "Следующая температура — {temperature}", "constant_temperature": "Постоянно {temperature}", "minimum_temperature": "Минимальная температура {temperature}", "copy_note": "{day} → выбранные дни. Их интервалы будут заменены.", "period_count": {"one": "{count} интервал", "few": "{count} интервала", "many": "{count} интервалов", "other": "{count} интервала"}, "schedule_count": {"one": "7 дней · {count} температура", "few": "7 дней · {count} температуры", "many": "7 дней · {count} температур", "other": "7 дней · {count} температуры"}, "day_0": "Понедельник", "day_short_0": "Пн", "day_1": "Вторник", "day_short_1": "Вт", "day_2": "Среда", "day_short_2": "Ср", "day_3": "Четверг", "day_short_3": "Чт", "day_4": "Пятница", "day_short_4": "Пт", "day_5": "Суббота", "day_short_5": "Сб", "day_6": "Воскресенье", "day_short_6": "Вс", "stored_on_valve": "Хранится в термоголовке", "unavailable": "Нет связи", "idle": "Ожидание", "status_unknown": "Состояние нагрева неизвестно", "battery_value": "Батарея {value}%", "connection_required": "Проверь подключение головки", "schedule_unavailable": "Расписание недоступно. Расписание по умолчанию не будет отправлено.", "invalid_device_schedule": "Головка сообщила некорректное расписание.", "admin_required": "Для сохранения названий температур нужен администратор.", "sending": "Отправка команды…", "confirmation_timeout": "Головка не подтвердила изменение. Проверь её состояние перед повтором.", "command_failed": "Не удалось обновить головку: {error}", "metadata_config_required": "Укажи dashboard и card_id для хранения названий температур.", "metadata_card_missing": "Не удалось однозначно найти карточку на панели.", "schedule_conflict": "Расписание головки изменилось во время редактирования. Перезагрузи страницу перед сохранением.", "saving": "Сохранение расписания и ожидание головки…", "saved_device": "Расписание и названия температур сохранены.", "save_partial": "Часть дней могла сохраниться. Перезагрузи страницу и проверь головку: {error}", "save_failed": "Расписание не сохранено: {error}", "too_many_transitions": "Головка поддерживает не больше шести переключений в сутки, включая полночь.", "invalid_time_24": "Введи время в 24-часовом формате, например 18:30 (24:00 допустимо для окончания).", "invalid_time_12": "Введи время от 01:00 до 12:59 и выбери AM или PM.", "period_meridiem": "{name}: AM или PM"}};
+/** Read the current user's language from Home Assistant; English is the default. */
+function resolveLanguage(hass, fallback = "en") {
+  return hass?.locale?.language || hass?.language || fallback;
+}
+
+/** A card-owned message catalog, independent of HA's built-in translation keys. */
+function createLocalizer(catalogs, requestedLanguage = "en") {
+  const normalized = String(requestedLanguage)
+    .trim()
+    .toLowerCase()
+    .replaceAll("_", "-");
+  const primary = normalized.split("-")[0];
+  const language = Object.hasOwn(catalogs, primary) ? primary : "en";
+  const pluralRules = new Intl.PluralRules(language);
+  const englishPluralRules = new Intl.PluralRules("en");
+  return {
+    language,
+    t(key, values = {}) {
+      let message = catalogs[language]?.[key];
+      let rules = pluralRules;
+      if (message === undefined) {
+        message = catalogs.en?.[key];
+        rules = englishPluralRules;
+      }
+      if (message && typeof message === "object") {
+        message = message[rules.select(Number(values.count))] ?? message.other;
+      }
+      if (typeof message !== "string") return key;
+      return message.replace(/\{(\w+)\}/g, (match, name) =>
+        Object.hasOwn(values, name) ? String(values[name]) : match,
+      );
+    },
+    number(value, options = {}) {
+      return new Intl.NumberFormat(language, {
+        maximumFractionDigits: 1,
+        useGrouping: false,
+        ...options,
+      }).format(value);
+    },
+  };
+}
+
+const root=document.getElementById('heating-eve-preview');
+let language=root.dataset.language||'en';
+let i18n=createLocalizer(catalogs,language);
+const t=(key,values)=>i18n.t(key,values);
+const presetName=p=>p.nameKey?t(p.nameKey):p.name;
+const $=s=>root.querySelector(s);
+const dayNames=Array.from({length:7},(_,i)=>t('day_'+i));
+const dayShort=Array.from({length:7},(_,i)=>t('day_short_'+i));
+const colors=['#529bcc','#eea147','#dd786e','#8a83c9','#61aa91','#c1974c'];
+const initial=()=>({schemaVersion:1,presets:[{id:'sleep',nameKey:'preset_sleep',temp:16,color:colors[0]},{id:'home',nameKey:'preset_home',temp:19,color:colors[1]},{id:'evening',nameKey:'preset_evening',temp:21,color:colors[2]}],days:Array.from({length:7},(_,i)=>({base:'sleep',periods:i<5?[{start:'07:00',end:'10:00',preset:'home'},{start:'17:00',end:'23:00',preset:'evening'}]:[{start:'08:00',end:'18:00',preset:'home'},{start:'18:00',end:'23:00',preset:'evening'}]})),selected:0});
+let state=initial();let dirty=false;let dialogKind=null;
+const stored=window.openai?.widgetState?.privateContent?.schedule;
+const storedLanguage=window.openai?.widgetState?.privateContent?.language;
+if(storedLanguage){language=storedLanguage;i18n=createLocalizer(catalogs,language);}
+if(stored&&Array.isArray(stored.presets)&&stored.presets.length&&Array.isArray(stored.days)&&stored.days.length===7)state=stored;
+function normalize(){
+ if(state.schemaVersion!==1){
+  for(const presets of [state.presets,state.applied?.presets||[]])for(const p of presets){
+   const key='preset_'+p.id;
+   if(catalogs.en[key]&&[catalogs.en[key],catalogs.ru[key]].includes(p.name)){p.nameKey=key;delete p.name;}
+  }
+  state.schemaVersion=1;
+ }
+ state.control={mode:'auto',manualTarget:21,override:null,source:'external',childLock:false,openWindow:false,frost:7,...state.control};
+ if(!state.applied)state.applied=JSON.parse(JSON.stringify({presets:state.presets,days:state.days}));
+}
+normalize();
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const getPreset=id=>state.presets.find(p=>p.id===id)||state.presets[0];
+const fmt=n=>i18n.number(n)+' °C';
+const minutes=t=>t==='24:00'?1440:Number(t.slice(0,2))*60+Number(t.slice(3));
+const clock=n=>String(Math.floor(n/60)).padStart(2,'0')+':'+String(n%60).padStart(2,'0');
+const icons=()=>{root.querySelectorAll('button,summary').forEach(el=>el.classList.add('cursor-interaction'));if(globalThis.lucide)lucide.createIcons({attrs:{width:18,height:18}});};
+function remember(){window.openai?.setWidgetState?.({modelContent:{language:i18n.language,temperatures:state.presets.map(p=>({name:presetName(p),temp:p.temp})),selectedDay:dayNames[state.selected],mode:state.control.mode,target:targetValue(),temporaryOverride:state.control.override!==null},privateContent:{schedule:state,language}})?.catch(()=>{});}
+function changed(){dirty=true;$('#save-status').textContent=t('unsaved');remember();}
+function options(id){return state.presets.map(p=>`<option value="${esc(p.id)}" ${p.id===id?'selected':''}>${esc(presetName(p))} · ${fmt(p.temp)}</option>`).join('');}
+
+function localizeStatic(){
+ root.lang=i18n.language;
+ dayNames.splice(0,7,...Array.from({length:7},(_,i)=>t('day_'+i)));
+ dayShort.splice(0,7,...Array.from({length:7},(_,i)=>t('day_short_'+i)));
+ root.querySelectorAll('[data-i18n]').forEach(el=>el.textContent=t(el.dataset.i18n));
+ root.querySelectorAll('[data-i18n-aria-label]').forEach(el=>el.setAttribute('aria-label',t(el.dataset.i18nAriaLabel)));
+ root.querySelectorAll('[data-i18n-placeholder]').forEach(el=>el.setAttribute('placeholder',t(el.dataset.i18nPlaceholder)));
+ $('#preview-language').value=i18n.language;
+ $('#save-status').textContent=t(dirty?'unsaved':'demo_changes');
+}
+
+function render(){
+ localizeStatic();
+ renderControl();
+ $('#temperature-list').innerHTML=state.presets.map(p=>`<div class="temperature-row"><span class="temperature-dot" style="--preset-color:${p.color}"></span><span class="temperature-name">${esc(presetName(p))}</span><span class="temperature-value">${fmt(p.temp)}</span><button type="button" class="icon-button" data-edit="${esc(p.id)}" aria-label="${esc(t('edit_named',{name:presetName(p)}))}"><i data-lucide="pencil" aria-hidden="true"></i></button></div>`).join('');
+ $('#day-picker').innerHTML=dayShort.map((d,i)=>`<button type="button" data-day="${i}" aria-pressed="${i===state.selected}" aria-label="${dayNames[i]}">${d}</button>`).join('');
+ const day=state.days[state.selected];$('#day-title').textContent=dayNames[state.selected];$('#day-count').textContent=t('period_count',{count:day.periods.length});
+ $('#base-temperature').innerHTML=options(day.base);
+ $('#timeline').style.background=getPreset(day.base).color;
+ $('#timeline').innerHTML=day.periods.map((p,i)=>`<div class="timeline-segment" data-period-segment="${i}" style="left:${minutes(p.start)/14.4}%;width:${(minutes(p.end)-minutes(p.start))/14.4}%;--preset-color:${getPreset(p.preset).color}" aria-label="${p.start}–${p.end}, ${esc(presetName(getPreset(p.preset)))}, ${fmt(getPreset(p.preset).temp)}"></div>`).join('');
+ $('#period-list').innerHTML=day.periods.map((p,i)=>`<div class="period" data-period="${i}"><div class="period-main"><div class="period-times"><input type="time" value="${p.start}" step="900" data-field="start" aria-label="${t('period_start',{count:i+1})}"><span>—</span><input type="time" value="${p.end==='24:00'?'00:00':p.end}" step="900" data-field="end" aria-label="${t('period_end',{count:i+1})}"></div><label class="period-preset"><span class="temperature-dot" style="--preset-color:${getPreset(p.preset).color}"></span><select data-field="preset" aria-label="${t('period_temperature',{count:i+1})}">${options(p.preset)}</select></label></div><button type="button" class="icon-button" data-delete-period="${i}" aria-label="${t('period_delete',{count:i+1})}"><i data-lucide="x" aria-hidden="true"></i></button></div>`).join('');
+ icons();
+}
+const demoDay=2,demoMinute=20*60+30;
+function planAt(dayIndex,time){
+ const day=state.applied.days[dayIndex];
+ const period=day.periods.find(p=>minutes(p.start)<=time&&time<minutes(p.end));
+ return state.applied.presets.find(p=>p.id===(period?.preset||day.base))||state.applied.presets[0];
+}
+function nextTransition(){
+ const active=planAt(demoDay,demoMinute);
+ for(let offset=0;offset<8;offset++){
+  const index=(demoDay+offset)%7,day=state.applied.days[index];
+  const boundaries=[...new Set([0,...day.periods.flatMap(p=>[minutes(p.start),minutes(p.end)])])].filter(m=>m<1440).sort((a,b)=>a-b);
+  for(const m of boundaries){if(offset===0&&m<=demoMinute)continue;const preset=planAt(index,m);if(preset.id!==active.id||preset.temp!==active.temp)return {time:clock(m),preset,offset,index};}
+ }
+ return null;
+}
+function targetValue(){return state.control.mode==='auto'?(state.control.override??planAt(demoDay,demoMinute).temp):state.control.mode==='heat'?state.control.manualTarget:null;}
+function renderControl(){
+ const c=state.control,active=planAt(demoDay,demoMinute),next=nextTransition(),target=targetValue();
+ const current=c.source==='external'?19.8:21.2;
+ $('#current-temperature').textContent=i18n.number(current,{minimumFractionDigits:1});
+ $('#target-temperature').textContent=target===null?'—':fmt(target);
+ $('#target-down').disabled=target===null||target<=4;$('#target-up').disabled=target===null||target>=35;
+ const heating=target!==null&&target>current;
+ $('#heating-status').classList.toggle('is-idle',!heating);
+ $('#heating-status').innerHTML=`<i data-lucide="${heating?'flame':c.mode==='off'?'power':'check'}" aria-hidden="true"></i>${heating?t('heating'):c.mode==='off'?t('off'):t('target_reached')}`;
+ root.querySelectorAll('[data-mode]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mode===c.mode)));
+ const nextTime=next?(next.offset===0?next.time:`${dayShort[next.index]}, ${next.time}`):'';
+ $('#target-context').textContent=c.mode==='auto'?(c.override!==null?(next?t('until_then',{time:nextTime,temperature:fmt(next.preset.temp)}):t('until_next')):t('scheduled_preset',{name:presetName(active)})):c.mode==='heat'?t('manual_mode'):t('frost_value',{temperature:fmt(c.frost)});
+ $('#next-event-label').textContent=c.mode==='auto'?(c.override!==null?t('temporary_override'):next?t('next_period',{time:nextTime,name:presetName(next.preset)}):t('constant_week')):c.mode==='heat'?t('schedule_paused'):t('frost_protection');
+ $('#next-event-detail').textContent=c.mode==='auto'?(c.override!==null?t('resume_next'):next?t('next_temperature',{temperature:fmt(next.preset.temp)}):t('constant_temperature',{temperature:fmt(active.temp)})):c.mode==='heat'?t('resume_auto'):t('minimum_temperature',{temperature:fmt(c.frost)});
+ $('#resume-schedule').hidden=!(c.mode==='auto'&&c.override!==null);
+ $('#child-lock').checked=c.childLock;$('#open-window').checked=c.openWindow;$('#temperature-source').value=c.source;$('#frost-temperature').value=c.frost;
+ $('#settings-summary').textContent=`${c.source==='external'?t('external_sensor'):t('internal_sensor')}${c.childLock?' · '+t('dial_locked'):''}`;
+ $('#schedule-summary').textContent=t('schedule_count',{count:state.applied.presets.length});
+}
+function error(text){$('#schedule-error').hidden=!text;$('#schedule-error').textContent=text;}
+function validate(periods){const sorted=[...periods].sort((a,b)=>minutes(a.start)-minutes(b.start));for(let i=0;i<sorted.length;i++){if(!/^\d\d:\d\d$/.test(sorted[i].start)||!/^\d\d:\d\d$/.test(sorted[i].end)||minutes(sorted[i].start)>=minutes(sorted[i].end))return t('invalid_period');if(i&&minutes(sorted[i].start)<minutes(sorted[i-1].end))return t('overlap');}return '';}
+function closeDialog(){const layer=$('#dialog-layer');layer.hidden=true;layer.innerHTML='';dialogKind=null;}
+function showPreset(id){
+ const preset=id?getPreset(id):{name:'',temp:20};dialogKind='preset';
+ $('#dialog-layer').innerHTML=`<section class="ha-dialog" role="dialog" aria-modal="true" aria-labelledby="temperature-dialog-title"><h3 id="temperature-dialog-title">${id?t('edit_temperature'):t('new_temperature')}</h3><label class="field-label" for="preset-name">${t('name')}</label><input class="name-input" id="preset-name" maxlength="28" placeholder="${t('name_placeholder')}" value="${esc(presetName(preset))}"><label class="field-label" for="preset-temp">${t('temperature_celsius')}</label><div class="temperature-stepper"><button type="button" class="icon-button" data-step="-0.5" aria-label="${t('temperature_down')}"><i data-lucide="minus" aria-hidden="true"></i></button><input type="number" id="preset-temp" min="4" max="35" step="0.5" value="${preset.temp}"><button type="button" class="icon-button" data-step="0.5" aria-label="${t('temperature_up')}"><i data-lucide="plus" aria-hidden="true"></i></button></div><div class="error-message" id="preset-error" role="alert" hidden></div><div class="dialog-actions">${id&&state.presets.length>1?`<button class="text-button delete-button" type="button" id="delete-preset">${t('delete')}</button>`:''}<button class="text-button" type="button" data-close>${t('cancel')}</button><button class="primary-button" type="button" id="confirm-preset">${t('done')}</button></div></section>`;
+ $('#dialog-layer').hidden=false;icons();$('#preset-name').focus();
+ $('#confirm-preset').onclick=()=>{const name=$('#preset-name').value.trim(),temp=Number($('#preset-temp').value);if(!name||!Number.isFinite(temp)||temp<4||temp>35||temp*2!==Math.round(temp*2)){const e=$('#preset-error');e.hidden=false;e.textContent=t('invalid_temperature');return;}if(id){const existing=getPreset(id);if(existing.nameKey&&name===presetName(existing)){existing.temp=temp;}else{Object.assign(existing,{name,temp});delete existing.nameKey;}}else state.presets.push({id:'p'+Date.now(),name,temp,color:colors[state.presets.length%colors.length]});changed();closeDialog();render();};
+ if($('#delete-preset'))$('#delete-preset').onclick=()=>{const used=state.days.some(d=>d.base===id||d.periods.some(p=>p.preset===id));if(used){const e=$('#preset-error');e.hidden=false;e.textContent=t('temperature_in_use');return;}state.presets=state.presets.filter(p=>p.id!==id);changed();closeDialog();render();};
+}
+function showCopy(){
+ dialogKind='copy';$('#dialog-layer').innerHTML=`<section class="ha-dialog" role="dialog" aria-modal="true" aria-labelledby="copy-title"><h3 id="copy-title">${t('copy_day')}</h3><p class="copy-note">${t('copy_note',{day:dayNames[state.selected]})}</p>${dayNames.map((d,i)=>i===state.selected?'':`<label class="copy-choice"><input type="checkbox" value="${i}" ${state.selected<5&&i<5?'checked':''}><span>${d}</span></label>`).join('')}<div class="dialog-actions"><button class="text-button" type="button" data-close>${t('cancel')}</button><button class="primary-button" type="button" id="confirm-copy">${t('copy')}</button></div></section>`;$('#dialog-layer').hidden=false;$('#confirm-copy').onclick=()=>{const checked=[...root.querySelectorAll('.copy-choice input:checked')];if(!checked.length)return;checked.forEach(c=>state.days[Number(c.value)]=JSON.parse(JSON.stringify(state.days[state.selected])));changed();closeDialog();render();$('#save-status').textContent=t('copied');};
+}
+root.addEventListener('click',e=>{
+ const button=e.target.closest('button');if(!button)return;
+ if(button.hasAttribute('data-mode')){
+  if(button.dataset.mode==='heat')state.control.manualTarget=targetValue()??state.control.manualTarget;
+  state.control.mode=button.dataset.mode;state.control.override=null;renderControl();icons();remember();
+ }
+ if(button.id==='target-up'||button.id==='target-down'){
+  const target=targetValue();if(target===null)return;
+  const value=Math.min(35,Math.max(4,target+(button.id==='target-up'?0.5:-0.5)));
+  if(state.control.mode==='auto')state.control.override=value;else state.control.manualTarget=value;
+  renderControl();icons();remember();
+ }
+ if(button.id==='resume-schedule'){state.control.override=null;renderControl();icons();remember();}
+ if(button.hasAttribute('data-edit'))showPreset(button.dataset.edit);
+ if(button.id==='add-temperature')showPreset();
+ if(button.hasAttribute('data-day')){state.selected=Number(button.dataset.day);error('');render();remember();}
+ if(button.hasAttribute('data-delete-period')){state.days[state.selected].periods.splice(Number(button.dataset.deletePeriod),1);changed();error('');render();}
+ if(button.hasAttribute('data-close'))closeDialog();
+ if(button.hasAttribute('data-step')){const input=$('#preset-temp');input.value=Math.min(35,Math.max(4,(Number(input.value)||20)+Number(button.dataset.step)));}
+ if(button.id==='copy-day')showCopy();
+ if(button.id==='add-period'){
+ const periods=state.days[state.selected].periods;const sorted=[...periods].sort((a,b)=>minutes(a.start)-minutes(b.start));let start=0;for(const p of sorted){if(minutes(p.start)-start>=60)break;start=minutes(p.end);}if(start>1380){error(t('no_free_hour'));return;}periods.push({start:clock(start),end:clock(start+60),preset:state.presets[1]?.id||state.presets[0].id});periods.sort((a,b)=>minutes(a.start)-minutes(b.start));changed();error('');render();
+ }
+ if(button.id==='save-schedule'){dirty=false;state.applied=JSON.parse(JSON.stringify({presets:state.presets,days:state.days}));renderControl();icons();remember();$('#save-status').textContent=t('saved');}
+});
+root.addEventListener('change',e=>{
+ if(e.target.id==='preview-language'){language=e.target.value;i18n=createLocalizer(catalogs,language);error('');render();remember();return;}
+ const settingMap={'child-lock':'childLock','open-window':'openWindow','temperature-source':'source','frost-temperature':'frost'};
+ if(settingMap[e.target.id]){
+  const key=settingMap[e.target.id];
+  if(key==='frost'){const value=Number(e.target.value);if(!Number.isFinite(value)||value<4||value>10||value*2!==Math.round(value*2)){e.target.value=state.control.frost;return;}state.control.frost=value;}
+  else state.control[key]=e.target.type==='checkbox'?e.target.checked:e.target.value;
+  renderControl();icons();remember();return;
+ }
+ if(e.target.id==='base-temperature'){state.days[state.selected].base=e.target.value;changed();render();return;}
+ const row=e.target.closest('[data-period]');if(!row)return;const i=Number(row.dataset.period);const periods=state.days[state.selected].periods;const draft=periods.map(p=>({...p}));let value=e.target.value;if(e.target.dataset.field==='end'&&value==='00:00')value='24:00';draft[i][e.target.dataset.field]=value;const issue=validate(draft);if(issue){error(issue);render();return;}state.days[state.selected].periods=draft.sort((a,b)=>minutes(a.start)-minutes(b.start));error('');changed();render();
+});
+root.addEventListener('keydown',e=>{if(e.key==='Escape'&&dialogKind)closeDialog();if(e.key==='Tab'&&dialogKind){const focusable=[...$('#dialog-layer').querySelectorAll('button,input,select')].filter(x=>!x.disabled);const first=focusable[0],last=focusable.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}});
+window.addEventListener('openai:set_globals',e=>{const saved=e.detail?.globals?.widgetState?.privateContent?.schedule;if(saved&&Array.isArray(saved.presets)&&saved.presets.length&&Array.isArray(saved.days)&&saved.days.length===7&&!dialogKind){state=saved;language=e.detail.globals.widgetState.privateContent.language||language;i18n=createLocalizer(catalogs,language);normalize();render();}});
+render();
+})();
+</script>

@@ -1,0 +1,296 @@
+<div id="heating-eve-preview">
+  <main
+    class="ha-demo"
+    aria-label="Living room radiator control"
+    data-i18n-aria-label="control_title"
+  >
+    <header class="device-header">
+      <span class="device-icon"
+        ><ha-icon icon="mdi:radiator" aria-hidden="true"></ha-icon
+      ></span>
+      <button
+        type="button"
+        class="device-name"
+        data-more-info
+        aria-haspopup="dialog"
+      >
+        <span class="device-title" data-i18n="room_name">Living room</span>
+        <span
+          ><span data-i18n="device_name">Radiator · SONOFF TRVZB</span></span
+        >
+      </button>
+      <span
+        class="battery"
+        aria-label="Battery 100 percent"
+        data-i18n-aria-label="battery_label"
+        ><ha-icon icon="mdi:battery" aria-hidden="true"></ha-icon>—</span
+      >
+    </header>
+    <div class="ha-content">
+      <section
+        class="control-panel"
+        aria-label="Temperature and mode"
+        data-i18n-aria-label="temperature_and_mode"
+      >
+        <div class="temperature-grid">
+          <div class="room-temperature">
+            <span><span data-i18n="room_temperature_short">Room</span></span>
+            <div>
+              <span id="current-temperature">—</span
+              ><span class="temperature-unit">°C</span>
+            </div>
+          </div>
+          <div class="target-temperature">
+            <div class="setpoint-label">
+              <span data-i18n="target_temperature_short">Target</span>
+            </div>
+            <div class="setpoint-stepper">
+              <button
+                type="button"
+                class="setpoint-button"
+                id="target-down"
+                aria-label="Decrease target temperature"
+                data-i18n-aria-label="target_down"
+              >
+                <ha-icon icon="mdi:minus" aria-hidden="true"></ha-icon></button
+              ><output id="target-temperature" aria-live="polite"></output
+              ><button
+                type="button"
+                class="setpoint-button"
+                id="target-up"
+                aria-label="Increase target temperature"
+                data-i18n-aria-label="target_up"
+              >
+                <ha-icon icon="mdi:plus" aria-hidden="true"></ha-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="mode-row">
+          <span
+            class="heating-status"
+            id="heating-status"
+            aria-live="polite"
+          ></span>
+          <div
+            class="mode-picker"
+            aria-label="Radiator mode"
+            data-i18n-aria-label="device_mode"
+          >
+            <button type="button" data-mode="auto">
+              <ha-icon icon="mdi:calendar-clock" aria-hidden="true"></ha-icon
+              ><span data-i18n="mode_auto">Auto</span></button
+            ><button type="button" data-mode="heat">
+              <ha-icon
+                icon="mdi:hand-back-right-outline"
+                aria-hidden="true"
+              ></ha-icon
+              ><span data-i18n="mode_manual">Manual</span></button
+            ><button type="button" data-mode="off">
+              <ha-icon icon="mdi:power" aria-hidden="true"></ha-icon
+              ><span data-i18n="mode_off">Off</span>
+            </button>
+          </div>
+        </div>
+        <div
+          id="target-context"
+          class="target-context"
+          aria-live="polite"
+        ></div>
+        <div class="next-event">
+          <ha-icon icon="mdi:clock-outline" aria-hidden="true"></ha-icon>
+          <div>
+            <span id="next-event-label"></span
+            ><span id="next-event-detail"></span>
+          </div>
+          <button type="button" class="text-button" id="resume-schedule" hidden>
+            <span data-i18n="resume">Resume</span>
+          </button>
+        </div>
+      </section>
+      <details class="device-section" id="schedule-section">
+        <summary>
+          <ha-icon
+            icon="mdi:calendar-month-outline"
+            aria-hidden="true"
+          ></ha-icon
+          ><span
+            ><span data-i18n="schedule">Schedule</span
+            ><small id="schedule-summary"
+              ><span data-i18n="schedule_intro"
+                >Custom temperatures and time slots</span
+              ></small
+            ></span
+          ><ha-icon
+            icon="mdi:chevron-down"
+            aria-hidden="true"
+            class="disclosure-icon"
+          ></ha-icon>
+        </summary>
+        <div class="schedule-body">
+          <section class="ha-panel" aria-labelledby="temperatures-heading">
+            <div class="section-title">
+              <h3 id="temperatures-heading">
+                <span data-i18n="temperatures">Temperatures</span>
+              </h3>
+            </div>
+            <div id="temperature-list"></div>
+            <button class="text-button" id="add-temperature" type="button">
+              <ha-icon icon="mdi:plus" aria-hidden="true"></ha-icon
+              ><span data-i18n="add_temperature">Add temperature</span>
+            </button>
+          </section>
+          <section
+            class="ha-panel schedule-panel"
+            aria-labelledby="schedule-heading"
+          >
+            <div class="section-title">
+              <h3 id="schedule-heading">
+                <span data-i18n="schedule">Schedule</span>
+              </h3>
+              <button
+                class="icon-button"
+                id="copy-day"
+                type="button"
+                aria-label="Copy day"
+                data-i18n-aria-label="copy_day"
+              >
+                <ha-icon icon="mdi:content-copy" aria-hidden="true"></ha-icon>
+              </button>
+            </div>
+            <div
+              class="day-picker"
+              id="day-picker"
+              aria-label="Day of the week"
+              data-i18n-aria-label="day_of_week"
+            ></div>
+            <div class="day-title">
+              <span id="day-title"></span><span id="day-count"></span>
+            </div>
+            <div class="timeline-axis">
+              <span>00</span><span>06</span><span>12</span><span>18</span
+              ><span>24</span>
+            </div>
+            <div
+              class="timeline"
+              id="timeline"
+              aria-label="Temperatures throughout the day"
+              data-i18n-aria-label="daily_timeline"
+            ></div>
+            <label class="base-temperature"
+              ><span><span data-i18n="otherwise">At other times</span></span
+              ><select
+                id="base-temperature"
+                aria-label="Temperature outside time slots"
+                data-i18n-aria-label="base_temperature"
+              ></select
+            ></label>
+            <div id="period-list" class="period-list"></div>
+            <button class="text-button" id="add-period" type="button">
+              <ha-icon icon="mdi:plus" aria-hidden="true"></ha-icon
+              ><span data-i18n="add_period">Add time slot</span>
+            </button>
+            <div
+              id="schedule-error"
+              class="error-message"
+              role="alert"
+              hidden
+            ></div>
+          </section>
+          <div class="save-row">
+            <span id="save-status" aria-live="polite"
+              ><span data-i18n="demo_changes"
+                >Changes stay in this preview</span
+              ></span
+            ><button class="primary-button" id="save-schedule" type="button">
+              <span data-i18n="save">Save</span>
+            </button>
+          </div>
+        </div>
+      </details>
+      <details class="device-section" id="settings-section">
+        <summary>
+          <ha-icon icon="mdi:tune" aria-hidden="true"></ha-icon
+          ><span
+            ><span data-i18n="settings">Settings</span
+            ><small id="settings-summary"
+              ><span data-i18n="settings_intro"
+                >External sensor · frost protection</span
+              ></small
+            ></span
+          ><ha-icon
+            icon="mdi:chevron-down"
+            aria-hidden="true"
+            class="disclosure-icon"
+          ></ha-icon>
+        </summary>
+        <div class="settings-body">
+          <label class="setting-row"
+            ><span
+              ><span data-i18n="child_lock">Child lock</span
+              ><small
+                ><span data-i18n="child_lock_help"
+                  >Prevent accidental dial changes</span
+                ></small
+              ></span
+            ><input
+              class="ha-switch"
+              id="child-lock"
+              type="checkbox"
+              role="switch"
+          /></label>
+          <label class="setting-row"
+            ><span
+              ><span data-i18n="open_window">Open window detection</span
+              ><small
+                ><span data-i18n="open_window_help"
+                  >Pause on a rapid temperature drop</span
+                ></small
+              ></span
+            ><input
+              class="ha-switch"
+              id="open-window"
+              type="checkbox"
+              role="switch"
+          /></label>
+          <label class="setting-row"
+            ><span
+              ><span data-i18n="temperature_source"
+                >Temperature sensor</span
+              ></span
+            ><select
+              id="temperature-source"
+              aria-label="Temperature sensor"
+              data-i18n-aria-label="temperature_source"
+            >
+              <option value="external" data-i18n="source_external">
+                External
+              </option>
+              <option value="internal" data-i18n="source_internal">
+                Built-in
+              </option>
+            </select></label
+          >
+          <label class="setting-row"
+            ><span
+              ><span data-i18n="frost_protection">Frost protection</span></span
+            ><span class="numeric-setting"
+              ><input
+                id="frost-temperature"
+                type="number"
+                min="4"
+                max="10"
+                step="0.5"
+                value="7"
+                aria-label="Frost protection temperature"
+                data-i18n-aria-label="frost_temperature"
+              />°C</span
+            ></label
+          >
+        </div>
+      </details>
+    </div>
+    <div class="device-feedback" role="status" aria-live="polite" hidden></div>
+    <div id="dialog-layer" class="dialog-layer" hidden></div>
+  </main>
+</div>
