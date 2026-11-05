@@ -26,7 +26,7 @@ jobs:
         run: npm run check:release -- --tag "$RELEASE_TAG"
         env:
           RELEASE_TAG: ${{ github.ref_name }}
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: trvzb-control-card
           path: release-assets
